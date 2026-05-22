@@ -10,6 +10,7 @@ Usage:  python main.py
 import random
 import math
 import statistics
+from config import SimConfig
 from simulation import run_simulation
 
 # ─── Statistical helpers ──────────────────────────────────────────────────────
@@ -68,32 +69,23 @@ def welch_compare(samples_a: list, samples_b: list, conf: float = 0.90) -> dict:
 
 # ─── Scenario configurations ──────────────────────────────────────────────────
 
-BASE_CONFIG = {}
+BASE_CONFIG  = SimConfig()
 
 # Alternative A: Add photo station + extra body-art artist  (cost: 150,000 ₪)
-ALT_A_CONFIG = {
-    'photo_servers': 4,   # 3 → 4
-    'body_servers': 3,    # 2 → 3
-}
+ALT_A_CONFIG = SimConfig(photo_servers=4, body_servers=3)
 
 # Alternative B: Better kitchen staff (500K) + Visitor gift bag (200K) = 700K ₪
-ALT_B_CONFIG = {
-    'lunch_prob': 0.85,        # 70% → 85% choose to eat
-    'food_bad_prob': 0.10,     # 40% → 10% bad meal probability
-    'satisfaction_init': 6.5,  # gift bag: initial satisfaction 5 → 6.5
-}
+ALT_B_CONFIG = SimConfig(lunch_prob=0.85, food_bad_prob=0.10,
+                         satisfaction_init=6.5)
 
 # Alternative C: Popular mainstream bands (300K) + Festival advertising (200K) = 500K ₪
-ALT_C_CONFIG = {
-    'mainstage_genre_val': 4,   # genre weight 3 → 4 in score formula
-    'band_shirt_prob': 0.8,     # band shirt purchase prob 0.3 → 0.8
-    'arrival_multiplier': 1.20, # 20% more arrivals
-}
+ALT_C_CONFIG = SimConfig(mainstage_genre_val=4, band_shirt_prob=0.8,
+                         arrival_multiplier=1.20)
 
 
 # ─── Runner helpers ───────────────────────────────────────────────────────────
 
-def run_n(config: dict, n: int, base_seed: int = 42) -> list:
+def run_n(config: SimConfig, n: int, base_seed: int = 42) -> list:
     return [run_simulation(config=config, seed=base_seed + i) for i in range(n)]
 
 
